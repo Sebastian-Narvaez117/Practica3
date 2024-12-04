@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{%block content %}
+
+<script>
+    $(document).ready(function () {
+        function url_change() {
+            var url = "http://localhost:5000/admin/family/search/";
+            var texto = $("#texto").val();
+            var criterio = $("#criterio").val();
+            url += criterio + "/" + texto;
+            $("#btn").attr("href", url);
+        }
+        console.log("url");
+        $("#texto").keyup(function () {
+            url_change();
+        });
+
+        $("#criterio").change(function () {
+            url_change();
+        });
+    });
+
+
+</script>
+
+<section lass="contact section">
+
+    <!-- Section Title -->
+    <div class="container section-title">
+        <h2>Lista</h2>
+        <p>Generadores</p>
+    </div>
+
+    <div class="container">
+        <div class="col-md-15">
+            <div class="col-lg-6 d-flex align-items-center mb-4">
+                <!-- Etiqueta y select -->
+                <label class="me-3 fw-bold">Criterio:</label>
+                <select id="criterio" class="form-select form-select-lg me-3 custom-select">
+                    <option value="apellido">Apellido</option>
+                    <option value="telefono">Teléfono</option>
+                </select>
+            
+                <!-- Input de texto -->
+                <input id="texto" class="form-control form-control-lg me-3" placeholder="Buscar">
+            
+                <!-- Botón Buscar -->
+                <a id="btn" class="btn btn-outline-warning me-2">Buscar</a>
+            
+                <!-- Botón Agregar con ícono "+" -->
+                <a href="/admin/generator/register" class="btn btn-outline-warning d-flex align-items-center">
+                    <span class="me-2"></span>
+                    <i class="fas fa-plus"></i> <!-- Ícono de "+" -->
+                </a>
+            </div>
+            
+            <div class="card-body">
+                <table class="table table-bordered table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nro</th>
+                            <th>Familia  <a href ="http://localhost:5000/admin/censo/order/apellido/1"><i class="bi-arrow-up"></i></a> <a href ="http://localhost:5000/admin/censo/order/apellido/0"><i class="bi-arrow-down"></i></a></th>
+                            <th>Telefono</th>
+                            <th>Consumo(Li)</th>
+                            <th>Costo($)</th>
+                            <th>Energia(KW)</th>
+                            <th>Combustible</th>
+                            <th>Uso</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in lista %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.family.apellido }}</td>
+                            <td>{{ item.family.telefono }}</td>
+                            <td>{{ item.consumo }}</td>
+                            <td>{{ item.costo }}</td>
+                            <td>{{ item.energia}}</td>
+                            <td>{{ item.combustible }}</td>
+                            <td>{{ item.uso }}</td>
+                            <td><a href="/admin/family/edit/{{ item.id }}" class="btn btn-outline-warning">Editar</a>         
+                                <a href="/admin/family/edit/{{ item.id }}" class="btn btn-outline-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

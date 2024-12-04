@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{%block content1 %}
+
+<script>
+    $(document).ready(function () {
+        function search() {
+            var texto = $("#texto").val();
+            var url = "http://localhost:8080/api/family/list/search/telefono/" + texto;
+            var client = $("#client");
+            var cliente = $("#cliente");
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    console.log(data);
+                    if (data.msg == "OK") {
+
+                        client.val(data.data.id);
+                        cliente.val(data.data.apellido);
+
+                    } else {
+
+                        client.val("");
+                        cliente.val("NO existe");
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    client.val("");
+                    cliente.val("NO existe");
+                    alert("Error en la busqueda");
+                }
+            });
+
+        }
+        $("#btn").click(function () {
+            search();
+        });
+
+    });
+</script>
+
+<div class="container section-title">
+    <h2>Registro</h2>
+    <p>Generador</p>
+</div>
+<div class="container">
+    <form method="post" role="form" action="/admin/generator/save" class="form">
+        <div class="row gy-4">
+            <!-- Teléfono, botón buscar y cliente -->
+            <div class="col-lg-4 col-md-6">
+                <label for="texto" class="form-label" style="color: rgb(151, 151, 98);">Teléfono</label>
+                <div class="d-flex">
+                    <input id="texto" class="form-control form-control-lg me-2" placeholder="Ingrese teléfono"
+                        style="background-color: black; color: white;">
+                    <a id="btn" class="btn btn-outline-warning">Buscar</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <label for="cliente" class="form-label" style="color: rgb(151, 151, 98);">Familia</label>
+                <input id="cliente" class="form-control form-control-lg" style="background-color: black; color: white;"
+                    readonly >
+                <input id="client" type="hidden"  name="family">
+            </div>
+
+            <!-- Combustible -->
+            <div class="col-lg-4 col-md-6">
+                <label for="combustible" class="form-label" style="color: rgb(151, 151, 98);">Combustible</label>
+                <select class="form-control custom-input text-white" id="combustible" name="combustible" required
+                    style="background-color: black;">
+                    {% for item in lista %}
+                    <option value="{{item}}">{{item}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Consumo -->
+            <div class="col-lg-4 col-md-6">
+                <label for="consumo" class="form-label" style="color: rgb(151, 151, 98);">Consumo (Li)</label>
+                <input type="number" class="form-control custom-input" name="consumo" placeholder="Consumo (Li)"
+                    required style="background-color: black; color: rgb(151, 151, 98);">
+            </div>
+
+            <!-- Costo -->
+            <div class="col-lg-4 col-md-6">
+                <label for="costo" class="form-label" style="color: rgb(151, 151, 98);">Costo ($)</label>
+                <input type="number" class="form-control custom-input" name="costo" placeholder="Costo ($)" required
+                    style="background-color: black; color: rgb(151, 151, 98);">
+            </div>
+
+            <!-- Energía Generada -->
+            <div class="col-lg-4 col-md-6">
+                <label for="energia_generada_KW" class="form-label" style="color: rgb(151, 151, 98);">Energía
+                    (KW)</label>
+                <input type="number" class="form-control custom-input" name="energia"
+                    placeholder="Energía (KW)" required style="background-color: black; color: rgb(151, 151, 98);">
+            </div>
+        </div>
+
+        <!-- Uso -->
+        <div class="form-group mt-4">
+            <label for="uso" class="form-label" style="color: rgb(151, 151, 98);">Uso</label>
+            <textarea class="form-control custom-input" name="uso" rows="5" placeholder="Uso" required
+                style="background-color: black; color: rgb(223, 223, 38);"></textarea>
+        </div>
+
+        <!-- Botones -->
+        <div class="text-center mt-4">
+            <button id="Registrar" class="btn btn-dark" type="submit">Registrar</button>
+            <a id="Cancelar" href="/admin/generator/list" class="btn btn-danger">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
